@@ -357,12 +357,14 @@ function quizletConfirmWritable(userAnswer, continueIfCorrect = true) {
     const isCorrect     = quizletSmartCompareWritableAnswer(userAnswer, correctAnswer);
     const cardIndex     = parseInt(quizlet.storage.get('cardIndex')) || 0;
 
+    // Refresh the progress bar
+    quizletRefreshProgressBar(1);
+
     if(isCorrect == true) {
         // Mark the card as done
         console.info(`Card ${correctAnswer.toUpperCase()} was written correctly. It wil not be asked again.`);
         cards[cardId].state = 3;
 
-        quizletRefreshProgressBar(1);
     
         // Go to next card automatically
         if(continueIfCorrect) {
@@ -373,8 +375,6 @@ function quizletConfirmWritable(userAnswer, continueIfCorrect = true) {
     } else if(isCorrect == 'semi') {
         console.info(`Card ${correctAnswer.toUpperCase()} was written correctly. It wil not be asked again.`);
         cards[cardId].state = 3;
-
-        quizletRefreshProgressBar(1);
     
         $('#quizlet-btn-continue').addClass('show');
     } else {
