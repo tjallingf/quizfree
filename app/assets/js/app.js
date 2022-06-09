@@ -58,8 +58,8 @@ function quizletOpenSet(setId) {
 
         quizletStart();
     }).catch(err => {
-        console.error('Er is iets misgegegaan waardoor de Quizlet niet kon worden geladen:', err);
-        alert('Er is iets misgegegaan waardoor de Quizlet niet kon worden geladen.');
+        console.error('Er is iets misgegegaan waardoor de Quizlet set niet kon worden geladen:', err);
+        alert('De set kon niet worden geladen. Weet je zeker dat deze Quizlet set bestaat?');
     })
 }
 
