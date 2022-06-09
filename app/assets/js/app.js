@@ -217,7 +217,7 @@ function quizletUpdateScene() {
 }
 
 function quizletCelebrate() {
-    quizletRefreshProgressBar(1000);
+    quizletRefreshProgressBar(100000);
     quizletShowScene('celebration');
     $('#quizlet-btn-continue').hide();
 }
@@ -357,14 +357,13 @@ function quizletConfirmWritable(userAnswer, continueIfCorrect = true) {
     const isCorrect     = quizletSmartCompareWritableAnswer(userAnswer, correctAnswer);
     const cardIndex     = parseInt(quizlet.storage.get('cardIndex')) || 0;
 
-    // Refresh the progress bar
-    quizletRefreshProgressBar(1);
-
     if(isCorrect == true) {
         // Mark the card as done
         console.info(`Card ${correctAnswer.toUpperCase()} was written correctly. It wil not be asked again.`);
         cards[cardId].state = 3;
 
+        // Refresh the progress bar
+        quizletRefreshProgressBar(1);
     
         // Go to next card automatically
         if(continueIfCorrect) {
@@ -375,6 +374,9 @@ function quizletConfirmWritable(userAnswer, continueIfCorrect = true) {
     } else if(isCorrect == 'semi') {
         console.info(`Card ${correctAnswer.toUpperCase()} was written correctly. It wil not be asked again.`);
         cards[cardId].state = 3;
+
+        // Refresh the progress bar
+        quizletRefreshProgressBar(1);
     
         $('#quizlet-btn-continue').addClass('show');
     } else {
@@ -414,8 +416,8 @@ function quizletSmartCompareWritableAnswer(userAnswer, corrAnswer) {
 
     console.log(userAnswer, corrAnswer);
 
-    if(userAnswer.main != corrAnswer.main) {
-        return false;
+    if(userAnswer.complete == corrAnswer.complete) {
+        return true;
     }
 
     if(userAnswer.options.length == 0 && corrAnswer.options.length == 0) {
@@ -444,17 +446,22 @@ function quizletParseAnswer(answer) {
         .replaceAll(regexForSuperfluosSpaces, ' ')
         .replaceAll(regexForSeperation, '|');
 
+    const complete = answer;
+
     // Main part is the part before the colon (or whole answer if a colon is not present)
     const main = answer.split(':')[0];
     let options = [];
     
+    // Remove part before colon
     if(answer.indexOf(':') > -1) {
-        const optionsString = answer.split(':')[1];
-        options = optionsString.split('|');
+        answer = answer.split(':')[1];
     }
 
+    // Split options
+    options = answer.split('|');
+
     return {
-        complete: answer,
+        complete: complete,
         main: main,
         options: options
     }
