@@ -409,41 +409,55 @@ function quizletRefreshProgressBar(incrementCurrentBy = 0) {
 }
 
 function quizletSmartCompareWritableAnswer(userAnswer, corrAnswer) {
-    const regex = /( \||\| |\|| ,|, |,| \/|\/ |\/ |\/|\:|\: |\:)/gm;
-    userAnswer = userAnswer.trim().toLowerCase().replaceAll(regex, '|');
-    corrAnswer = corrAnswer.trim().toLowerCase().replaceAll(regex, '|');
+    userAnswer = quizletParseAnswer(userAnswer);
+    corrAnswer = quizletParseAnswer(corrAnswer);
 
     console.log(userAnswer, corrAnswer);
 
-    // // Transform array into string if it's only one item
-    // if(corrAnswer.length == 1) {
-    //     corrAnswer = corrAnswer[0];
-    // }
+    if(userAnswer.main != corrAnswer.main) {
+        return false;
+    }
 
-    // // Loop all items
-    // if(typeof corrAnswer == 'array' || typeof corrAnswer == 'object') {
-    //     let isCorrect = false;
-    //     $.each(corrAnswer, function(i, corrAnswerItem) {
-    //         isCorrect = quizletSmartCompareWritableAnswer(userAnswer, corrAnswerItem);
+    if(userAnswer.options.length == 0 && corrAnswer.options.length == 0) {
+        return true;
+    }
 
-    //         if(isCorrect) {
-    //             return false;
-    //         }
-    //     })
-
-    //     return isCorrect;
-    // }
-
-    // // Remove 'to' from both answers if they start with it
-    // userAnswer = userAnswer.substring(0, 3) == 'to ' ? userAnswer.substring(3) : userAnswer;
-    // corrAnswer = corrAnswer.substring(0, 3) == 'to ' ? corrAnswer.substring(3) : corrAnswer;
-
-    // // Check if correctAnswer starting from ':' is qual to userAnswer
-    // if(corrAnswer.substring(corrAnswer.indexOf(':')+1).trim() == userAnswer) {
-    //     return 'semi';
-    // }
+    // Check if the correct answer contains at least one of the options entered
+    // by the user
+    let optionsMatch = false;
+    $.each(corrAnswer.options, function(i, option) {
+        if(userAnswer.options.includes(option)) {
+            optionsMatch = 'semi';
+            return false;
+        }
+    })
     
-    return userAnswer == corrAnswer;
+    return optionsMatch;
+}
+
+function quizletParseAnswer(answer) {  
+    const regexForSeperation       = /( \||\| |\|| ,|, |,| \/|\/ |\/| \-|\- |\-)/gm;
+    const regexForSuperfluosSpaces = /\s\s+/gm;
+    answer = answer
+        .trim()
+        .toLowerCase()
+        .replaceAll(regexForSuperfluosSpaces, ' ')
+        .replaceAll(regexForSeperation, '|');
+
+    // Main part is the part before the colon (or whole answer if a colon is not present)
+    const main = answer.split(':')[0];
+    let options = [];
+    
+    if(answer.indexOf(':') > -1) {
+        const optionsString = answer.split(':')[1];
+        options = optionsString.split('|');
+    }
+
+    return {
+        complete: answer,
+        main: main,
+        options: options
+    }
 }
 
 function quizletMarkWritableAnswerCorrect() {
