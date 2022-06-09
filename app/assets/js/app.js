@@ -573,7 +573,13 @@ function quizletGetCardsByState(ignoreMinCardIndex = false) {
 }
 
 $(document).on('keypress', function(e) {
+    if($(e.target).is('input')) {
+        return;
+    }
+
+    e.preventDefault();
     const key = e.key.toLowerCase();
+
 
     if(!isSet(key)) {
         return;
@@ -587,7 +593,7 @@ $(document).on('keypress', function(e) {
         const $answers = $('#quizlet-mc-answers');
         $answers.find(`.quizlet-mc-card:nth-child(${key})`).trigger('click');
     } else if(key == ' ') {
-        // Mark as correct
+        // Space
         $('#quizlet-writable-mark-answer-correct:not([style*="none"])').trigger('click');
     } else {
         return;
