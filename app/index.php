@@ -14,7 +14,7 @@
             <div class="mb-3">
                 <input id="quizlet-set-link" list="quizlet-recent-sets" class="form-control" placeholder="Vul hier de link naar een Quizlet in" type="text">
                 <datalist id="quizlet-recent-sets"></datalist>
-                <small class="whitespace-nowrap">Bijvoorbeeld: https://quizlet.com/nl/123456789/een-quizlet/</small>
+                <small class="whitespace-nowrap">Voorbeeld: https://quizlet.com/nl/123456789/een-quizlet/</small>
             </div>
             <button class="btn btn-primary" onclick="quizletOpenSetFromUrl($('#quizlet-set-link').val(), 'learn');">
                 <i class="fal fa-graduation-cap mr-1"></i>
