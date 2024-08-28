@@ -1,4 +1,4 @@
-# Quizlet Unlocked
+# Quizfree
 
 The popular studying app [Quizlet](ttps://quizlet.com) decided to restrict access to most popular 
 studying modes (learn and write) and only allow full access to Quizlet Plus users. Since I often use
